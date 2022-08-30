@@ -10,7 +10,6 @@ export const pageReducer = (state: Page, action: PageReducerActions): Page => {
       return { ...state, lastEditedAt: action.newDate };
     case "reorderBlocks":
       return { ...state, blocks: action.newOrder };
-
     case "addBlock":
       return {
         ...state,
@@ -20,7 +19,6 @@ export const pageReducer = (state: Page, action: PageReducerActions): Page => {
           ...state.blocks.slice(action.index),
         ],
       };
-
     case "removeBlock":
       return {
         ...state,
@@ -33,7 +31,6 @@ export const pageReducer = (state: Page, action: PageReducerActions): Page => {
           }),
         ],
       };
-
     case "editBlock":
       return {
         ...state,

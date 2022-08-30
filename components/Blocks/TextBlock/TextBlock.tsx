@@ -1,12 +1,11 @@
-import { Group, Stack, Text, Textarea } from "@mantine/core";
+import { Stack, Textarea } from "@mantine/core";
 import { useFocusWithin } from "@mantine/hooks";
-import { IconDots } from "@tabler/icons";
 import React, { ChangeEvent, Dispatch, FC, useEffect, useState } from "react";
 import { BlockType, TextBlockType } from "../../../models/blocks";
 import { PageReducerActions } from "../../../models/pages";
 import {
-  defaultImageBlock,
-  defaultTextBlock,
+  getDefaultImageBlock,
+  getDefaultTextBlock,
 } from "../../../utils/defaultBlocks";
 import DropDownMenu from "./DropDownMenu";
 
@@ -28,14 +27,14 @@ const TextBlock: FC<TextBlockProps> = ({ textBlock, index, dispatch }) => {
       case "Text":
         dispatch({
           type: "editBlock",
-          newBlock: defaultTextBlock,
+          newBlock: getDefaultTextBlock(),
           index: index,
         });
         break;
       case "Image":
         dispatch({
           type: "editBlock",
-          newBlock: defaultImageBlock,
+          newBlock: getDefaultImageBlock(),
           index: index,
         });
         break;
@@ -46,8 +45,11 @@ const TextBlock: FC<TextBlockProps> = ({ textBlock, index, dispatch }) => {
 
   const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value);
-
-    // TODO Update TextBlock Value On Page
+    dispatch({
+      type: "editBlock",
+      newBlock: { ...textBlock, text: e.target.value },
+      index: index,
+    });
   };
 
   useEffect(() => {

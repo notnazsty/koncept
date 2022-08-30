@@ -8,26 +8,32 @@ import TextBlock from "./TextBlock/TextBlock";
 
 interface BlockDisplayProps {
   blocks: PageBlock[];
-  pageData: Page;
+  state: Page;
   dispatch: Dispatch<PageReducerActions>;
 }
 
-const BlockDisplay: FC<BlockDisplayProps> = ({
-  blocks,
-  pageData,
-  dispatch,
-}) => {
+const BlockDisplay: FC<BlockDisplayProps> = ({ blocks, state, dispatch }) => {
   const renderBlock = (block: PageBlock, index: number) => {
     switch (block.blockType) {
       case "Text":
         return (
-          <BlockWrapper index={index} dispatch={dispatch} key={index}>
+          <BlockWrapper
+            state={state}
+            index={index}
+            dispatch={dispatch}
+            key={block.blockId}
+          >
             <TextBlock textBlock={block} index={index} dispatch={dispatch} />
           </BlockWrapper>
         );
       case "Image":
         return (
-          <BlockWrapper index={index} dispatch={dispatch} key={index}>
+          <BlockWrapper
+            state={state}
+            index={index}
+            dispatch={dispatch}
+            key={block.blockId}
+          >
             <ImageBlock imageBlock={block} index={index} dispatch={dispatch} />
           </BlockWrapper>
         );

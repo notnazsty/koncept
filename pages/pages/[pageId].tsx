@@ -14,7 +14,7 @@ import { IconChevronsLeft, IconChevronsRight } from "@tabler/icons";
 import { ChangeEvent, useEffect, useMemo, useReducer, useState } from "react";
 import { pageReducer } from "../../utils/reducers/pageReducer";
 import BlockDisplay from "../../components/Blocks/BlockDisplay";
-import { defaultTextBlock } from "../../utils/defaultBlocks";
+import { getDefaultTextBlock } from "../../utils/defaultBlocks";
 
 const KonceptPage: NextPage = () => {
   // Temp Sample Data
@@ -36,9 +36,10 @@ const KonceptPage: NextPage = () => {
   // Add A Blank Text Block If No Blocks In Page
   useEffect(() => {
     if (state.blocks.length === 0) {
-      dispatch({ type: "addBlock", block: defaultTextBlock, index: 0 });
+      dispatch({ type: "addBlock", block: getDefaultTextBlock(), index: 0 });
       console.log(state.blocks.length);
-    }  }, [state.blocks.length]);
+    }
+  }, [state.blocks.length]);
 
   return (
     <div>
@@ -88,14 +89,14 @@ const KonceptPage: NextPage = () => {
               dispatch({ type: "changeName", newName: e.target.value });
             }}
             styles={{
-              input: { fontSize: 32, fontWeight: "bold", color: "gray" },
+              input: { fontSize: 32, fontWeight: "bold", color: "black" },
             }}
           />
 
           <BlockDisplay
             dispatch={dispatch}
             blocks={state.blocks}
-            pageData={state}
+            state={state}
           />
         </Container>
       </AppShell>
