@@ -18,6 +18,7 @@ const BlockWrapper: FC<BlockWrapperProps> = ({
   state,
 }) => {
   const [draggableState, setDraggableState] = useState(false);
+  
 
   const onDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     console.log("ran", index);
@@ -29,21 +30,16 @@ const BlockWrapper: FC<BlockWrapperProps> = ({
     if (typeof initIndex == "number") {
       let initBlockVal = state.blocks[initIndex];
       let currentBlockVal = state.blocks[index];
-      console.log({ initIndex, initBlockVal }, { index, currentBlockVal });
-
-      const newBlockOrder = state.blocks.map((block, i) => {
-        if (i == index) return initBlockVal;
-
-        if (i === initIndex) return currentBlockVal;
-
-        return block;
-      });
-
-      console.log(newBlockOrder);
 
       dispatch({
         type: "reorderBlocks",
-        newOrder: newBlockOrder,
+        newOrder: state.blocks.map((block, i) => {
+          if (i == index) return initBlockVal;
+
+          if (i === initIndex) return currentBlockVal;
+
+          return block;
+        }),
       });
     }
   };
@@ -53,6 +49,7 @@ const BlockWrapper: FC<BlockWrapperProps> = ({
       spacing={2}
       draggable={draggableState}
       style={{
+        marginBlock:4,
         overflow: "hidden",
         display: "flex",
         flexDirection: "row",
@@ -113,7 +110,7 @@ const BlockWrapper: FC<BlockWrapperProps> = ({
           <Button
             variant="white"
             sx={{ width: "18", padding: 0 }}
-            onTouchStart={() => setDraggableState(true)}
+            onTouchStart={() => {setDraggableState(true)}}
             onMouseDown={() => setDraggableState(true)}
             onMouseUp={() => setDraggableState(false)}
             onMouseLeave={() => setDraggableState(false)}

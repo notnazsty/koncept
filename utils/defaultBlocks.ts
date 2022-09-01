@@ -1,15 +1,7 @@
 import { v4 as uuid } from "uuid";
 import { BlockType, ImageBlockType, TextBlockType } from "../models/blocks";
 
-// export const defaultTextBlock: TextBlockType = {
-//   blockType: BlockType.TextBlock,
-//   text: "",
-//   color: "black",
-//   fontSize: 12,
-//   blockId: uuid(),
-//   createdAt: new Date(),
-//   lastEditedAt: new Date(),
-// };
+
 
 export const getDefaultTextBlock = (): TextBlockType => {
   return {
