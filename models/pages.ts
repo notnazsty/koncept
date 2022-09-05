@@ -18,7 +18,8 @@ export type PageReducerActions =
   | { type: "addBlock"; block: PageBlock; index: number }
   | { type: "removeBlock"; index: number }
   | { type: "reorderBlocks"; newOrder: PageBlock[] }
-  | { type: "editBlock"; newBlock: PageBlock; index: number };
+  | { type: "editBlock"; newBlock: PageBlock; index: number }
+  | { type: "switchBlocks"; positionOne: number; positionTwo: number };
 
 export interface PageReducerState {
   data: Page;

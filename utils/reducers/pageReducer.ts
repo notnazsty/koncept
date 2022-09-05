@@ -44,6 +44,23 @@ export const pageReducer = (state: Page, action: PageReducerActions): Page => {
           }),
         ],
       };
+    case "switchBlocks":
+      const firstBlock = state.blocks[action.positionOne];
+      const secondBlock = state.blocks[action.positionTwo];
+      const newBlockArr = state.blocks.map((block, i) => {
+        if (i == action.positionOne) {
+          return secondBlock;
+        }
+        if (i == action.positionTwo) {
+          return firstBlock;
+        }
+        return block;
+      });
+
+      return {
+        ...state,
+        blocks: newBlockArr,
+      };
 
     default:
       return state;

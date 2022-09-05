@@ -1,10 +1,18 @@
 import { Stack, Textarea } from "@mantine/core";
 import { useFocusWithin } from "@mantine/hooks";
-import React, { ChangeEvent, Dispatch, FC, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  KeyboardEvent,
+  Dispatch,
+  FC,
+  useEffect,
+  useState,
+} from "react";
 import { BlockType, TextBlockType } from "../../../models/blocks";
 import { PageReducerActions } from "../../../models/pages";
 import {
   getDefaultImageBlock,
+  getDefaultListBlock,
   getDefaultTextBlock,
 } from "../../../utils/defaultBlocks";
 import DropDownMenu from "./DropDownMenu";
@@ -21,7 +29,6 @@ const TextBlock: FC<TextBlockProps> = ({ textBlock, index, dispatch }) => {
   const [value, setValue] = useState(textBlock.text);
   const [opened, setOpened] = useState(false);
 
-  // Update Block Type Based On Commands/Menu Clicks
   const changeBlockType = (blockType: BlockType) => {
     switch (blockType) {
       case "Text":
@@ -38,6 +45,13 @@ const TextBlock: FC<TextBlockProps> = ({ textBlock, index, dispatch }) => {
           index: index,
         });
         break;
+      case "List":
+        dispatch({
+          type: "editBlock",
+          newBlock: getDefaultListBlock(),
+          index: index,
+        });
+        break;
       default:
         break;
     }
@@ -50,6 +64,26 @@ const TextBlock: FC<TextBlockProps> = ({ textBlock, index, dispatch }) => {
       newBlock: { ...textBlock, text: e.target.value },
       index: index,
     });
+  };
+
+  const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    console.log(e.key);
+    if (e.key == "Enter" && value.substring(0, 1) == "/" && focused) {
+      const t = value.toLowerCase().substring(1);
+      switch (t) {
+        case "text":
+          changeBlockType(BlockType.TextBlock);
+          break;
+        case "image":
+          changeBlockType(BlockType.ImageBlock);
+          break;
+        case "list":
+          changeBlockType(BlockType.ListBlock);
+          break;
+        default:
+          break;
+      }
+    }
   };
 
   useEffect(() => {
@@ -68,6 +102,9 @@ const TextBlock: FC<TextBlockProps> = ({ textBlock, index, dispatch }) => {
         value={value}
         onChange={(e) => {
           onChange(e);
+        }}
+        onKeyDown={(e) => {
+          handleKeyPress(e);
         }}
         styles={
           value.length == 0

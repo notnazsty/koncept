@@ -1,7 +1,10 @@
 import { v4 as uuid } from "uuid";
-import { BlockType, ImageBlockType, TextBlockType } from "../models/blocks";
-
-
+import {
+  BlockType,
+  ImageBlockType,
+  ListBlockType,
+  TextBlockType,
+} from "../models/blocks";
 
 export const getDefaultTextBlock = (): TextBlockType => {
   return {
@@ -24,5 +27,16 @@ export const getDefaultImageBlock = (): ImageBlockType => {
     blockId: uuid(),
     createdAt: new Date(),
     lastEditedAt: new Date(),
+  };
+};
+
+export const getDefaultListBlock = (): ListBlockType => {
+  return {
+    blockType: BlockType.ListBlock,
+    blockId: uuid(),
+    createdAt: new Date(),
+    lastEditedAt: new Date(),
+    list: ["Type Here"],
+    bulletType: "Dots",
   };
 };

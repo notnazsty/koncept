@@ -1,8 +1,9 @@
 import { Group, Tooltip, Button } from "@mantine/core";
 import { IconPlus, IconDragDrop2 } from "@tabler/icons";
-import React, { Dispatch, FC, ReactNode, useState } from "react";
+import React, { Dispatch, FC, ReactNode, useRef } from "react";
 import { Page, PageReducerActions } from "../../../models/pages";
 import { getDefaultTextBlock } from "../../../utils/defaultBlocks";
+import { useDrag, useDrop, XYCoord } from "react-dnd";
 
 interface BlockWrapperProps {
   index: number;
@@ -11,56 +12,90 @@ interface BlockWrapperProps {
   state: Page;
 }
 
+interface DragItem {
+  index: number;
+  type: string;
+}
+
 const BlockWrapper: FC<BlockWrapperProps> = ({
   index,
   children,
   dispatch,
   state,
 }) => {
-  const [draggableState, setDraggableState] = useState(false);
-  
+  const ref = useRef<HTMLDivElement>(null);
 
-  const onDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    console.log("ran", index);
-    e.dataTransfer.setData("index", `${index}`);
-  };
+  const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: any }>({
+    accept: "Block",
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+    hover(item: DragItem, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
 
-  const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    let initIndex = parseInt(e.dataTransfer.getData("index"));
-    if (typeof initIndex == "number") {
-      let initBlockVal = state.blocks[initIndex];
-      let currentBlockVal = state.blocks[index];
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+
+      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+      const clientOffset = monitor.getClientOffset();
+
+      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
 
       dispatch({
-        type: "reorderBlocks",
-        newOrder: state.blocks.map((block, i) => {
-          if (i == index) return initBlockVal;
-
-          if (i === initIndex) return currentBlockVal;
-
-          return block;
-        }),
+        type: "switchBlocks",
+        positionOne: dragIndex,
+        positionTwo: hoverIndex,
       });
-    }
-  };
+
+      item.index = hoverIndex;
+    },
+  });
+
+  const [{ isDragging }, drag] = useDrag({
+    type: "Block",
+    item: () => {
+      return { index };
+    },
+    collect: (monitor: any) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const opacity = isDragging ? 0.2 : 1;
+  drag(drop(ref));
 
   return (
     <Group
+      ref={ref}
       spacing={2}
-      draggable={draggableState}
       style={{
-        marginBlock:4,
+        opacity,
+        marginBlock: 4,
         overflow: "hidden",
         display: "flex",
         flexDirection: "row",
         alignItems: "start",
         flexWrap: "nowrap",
       }}
-      onDragStart={(e) => {
-        onDragStart(e);
-      }}
-      onDrop={(e) => onDrop(e)}
-      onDragOver={(e) => e.preventDefault()}
     >
       <Group
         spacing={4}
@@ -73,33 +108,29 @@ const BlockWrapper: FC<BlockWrapperProps> = ({
           opacity: "0",
         }}
       >
-        <Tooltip
+        {/* <Tooltip
           label="Click to add a block below"
           position="bottom"
           withArrow
           color="dark"
         >
-          <Button variant="white" sx={{ width: "18", padding: 0 }}>
-            <IconPlus
-              size={18}
-              style={{ cursor: "pointer", color: "black" }}
-              onClick={() =>
-                dispatch({
-                  type: "addBlock",
-                  block: getDefaultTextBlock(),
-                  index: index + 1,
-                })
-              }
-            />
-          </Button>
-        </Tooltip>
+          
+        </Tooltip> */}
+        <Button variant="white" sx={{ width: "18", padding: 0 }}>
+          <IconPlus
+            size={18}
+            style={{ cursor: "pointer", color: "black" }}
+            onClick={() =>
+              dispatch({
+                type: "addBlock",
+                block: getDefaultTextBlock(),
+                index: index + 1,
+              })
+            }
+          />
+        </Button>
 
-        <Tooltip
-          sx={
-            !draggableState
-              ? { visibility: "inherit" }
-              : { visibility: "hidden" }
-          }
+        {/* <Tooltip
           multiline
           width={108}
           label="Drag to move. Click to open."
@@ -107,21 +138,11 @@ const BlockWrapper: FC<BlockWrapperProps> = ({
           withArrow
           color="dark"
         >
-          <Button
-            variant="white"
-            sx={{ width: "18", padding: 0 }}
-            onTouchStart={() => {setDraggableState(true)}}
-            onMouseDown={() => setDraggableState(true)}
-            onMouseUp={() => setDraggableState(false)}
-            onMouseLeave={() => setDraggableState(false)}
-            onTouchEnd={() => setDraggableState(false)}
-          >
-            <IconDragDrop2
-              size={18}
-              style={{ cursor: "pointer", color: "black" }}
-            />
-          </Button>
-        </Tooltip>
+          
+        </Tooltip> */}
+        <Button variant="white" sx={{ width: "18", padding: 0 }}>
+          <IconDragDrop2 size={18} style={{ cursor: "grab", color: "black" }} />
+        </Button>
       </Group>
       {children}
     </Group>
