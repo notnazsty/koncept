@@ -108,14 +108,7 @@ const BlockWrapper: FC<BlockWrapperProps> = ({
           opacity: "0",
         }}
       >
-        {/* <Tooltip
-          label="Click to add a block below"
-          position="bottom"
-          withArrow
-          color="dark"
-        >
-          
-        </Tooltip> */}
+     
         <Button variant="white" sx={{ width: "18", padding: 0 }}>
           <IconPlus
             size={18}
@@ -130,16 +123,6 @@ const BlockWrapper: FC<BlockWrapperProps> = ({
           />
         </Button>
 
-        {/* <Tooltip
-          multiline
-          width={108}
-          label="Drag to move. Click to open."
-          position="bottom"
-          withArrow
-          color="dark"
-        >
-          
-        </Tooltip> */}
         <Button variant="white" sx={{ width: "18", padding: 0 }}>
           <IconDragDrop2 size={18} style={{ cursor: "grab", color: "black" }} />
         </Button>

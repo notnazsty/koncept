@@ -9,6 +9,13 @@ export interface Page {
   blocks: PageBlock[];
 }
 
+export interface PageReducerState {
+  isLoaded: boolean;
+  isUpdating: boolean;
+  lastUpdated: boolean;
+  pageData: Page;
+}
+
 export type IconList = string; // Replace With Different Icon Types
 
 export type PageReducerActions =
@@ -19,13 +26,9 @@ export type PageReducerActions =
   | { type: "removeBlock"; index: number }
   | { type: "reorderBlocks"; newOrder: PageBlock[] }
   | { type: "editBlock"; newBlock: PageBlock; index: number }
-  | { type: "switchBlocks"; positionOne: number; positionTwo: number };
+  | { type: "switchBlocks"; positionOne: number; positionTwo: number }
+  | { type: "sync" };
 
 export interface PageReducerState {
   data: Page;
 }
-
-// Need A More Complex Reducer State When Loading Data From DB
-// export interface PageReducerState {
-//
-// }

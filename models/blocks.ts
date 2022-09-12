@@ -35,12 +35,14 @@ export interface ImageBlockType extends AbstractPageBlock {
 
 export interface ListBlockType extends AbstractPageBlock {
   blockType: BlockType.ListBlock;
-  list: ListElement[];
+  list: ListItem[];
   bulletType: "Numbered" | "Dots" | "Dashes";
   // TODO Expand on This (MAKE MORE CONCRETE)
 }
 
-export type ListElement = (string | string[] | string[][]);
+
+
+export  type ListItem = { id: string; text: string };
 
 export interface SubPageBlockType extends AbstractPageBlock {
   blockType: BlockType.SubPageBlock;

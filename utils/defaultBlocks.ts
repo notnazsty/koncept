@@ -36,7 +36,7 @@ export const getDefaultListBlock = (): ListBlockType => {
     blockId: uuid(),
     createdAt: new Date(),
     lastEditedAt: new Date(),
-    list: ["Type Here"],
+    list: [{ id: uuid(), text: "Type Here" }],
     bulletType: "Dots",
   };
 };
